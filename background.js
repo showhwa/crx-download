@@ -172,18 +172,26 @@ chrome.runtime.onInstalled.addListener(function (details) {
     });
 
     chrome.contextMenus.create({
-        'title': 'Download CRX for this extension',
-        'contexts': ['all'],
-        parentId: parent,
-        id: "crxmicrosoft",
-        'documentUrlPatterns': ['https://microsoftedge.microsoft.com/addons/detail/*']
-    });
-    chrome.contextMenus.create({
         'title': 'Download ZIP for this extension',
         'contexts': ['all'],
         id: "zip",
         parentId: parent,
         'documentUrlPatterns': ['https://chrome.google.com/webstore/detail/*', 'https://chromewebstore.google.com/detail/*']
+    });
+    
+    // Microsoft Edge Addons context menu
+    const parentMicrosoft = chrome.contextMenus.create({
+        'title': 'Download CRX for this extension',
+        'contexts': ['all'],
+        'id': "parentMicrosoft",
+        'documentUrlPatterns': ['https://microsoftedge.microsoft.com/addons/detail/*']
+    });
+    chrome.contextMenus.create({
+        'title': 'Download CRX for this extension',
+        'contexts': ['all'],
+        id: "crxmicrosoft",
+        parentId: parentMicrosoft,
+        'documentUrlPatterns': ['https://microsoftedge.microsoft.com/addons/detail/*']
     });
 });
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
