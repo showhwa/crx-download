@@ -66,8 +66,9 @@ async function getExtensionVersion(extensionId) {
         if (versionMatch && versionMatch[1]) {
             // Convert underscores to dots: 3_4_5_0 -> 3.4.5.0
             let extractedVersion = versionMatch[1].replace(/_/g, '.');
-            // Remove trailing .0 if present
-            extractedVersion = extractedVersion.replace(/\.0$/, '');
+            // Keep only first three parts (e.g., 3.4.5.0 -> 3.4.5)
+            const parts = extractedVersion.split('.');
+            extractedVersion = parts.slice(0, 3).join('.');
             console.log('Extracted version:', extractedVersion);
             return extractedVersion;
         }
@@ -103,7 +104,7 @@ async function download(downloadAs, tab) {
         console.log('Start getting version, Extension ID:', result[1]);
         const extVersion = await getExtensionVersion(result[1]);
         console.log('Got version:', extVersion);
-        const versionSuffix = extVersion ? `_v${extVersion}` : '';
+        const versionSuffix = extVersion ? `-v${extVersion}` : '';
         console.log('Version suffix:', versionSuffix);
         console.log('Final filename:', name + versionSuffix);
         
@@ -123,7 +124,7 @@ async function download(downloadAs, tab) {
         
         // Get Edge extension version
         const extVersion = await getEdgeExtensionVersion(edgeId[1]);
-        const versionSuffix = extVersion ? `_v${extVersion}` : '';
+        const versionSuffix = extVersion ? `-v${extVersion}` : '';
         
         url = `https://edge.microsoft.com/extensionwebstorebase/v1/crx?response=redirect&prod=chromiumcrx&prodchannel=&x=id%3D${edgeId[1]}%26installsource%3Dondemand%26uc`;
         downloadFile(url, name + versionSuffix + ".crx", edgeId[1] + ".crx");
