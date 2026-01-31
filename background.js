@@ -58,12 +58,14 @@ async function getExtensionVersion(extensionId) {
         
         // Extract version from the final URL
         // Format: https://clients2.googleusercontent.com/crx/blobs/.../EXTENSIONID_3_4_5_0.crx
-        const versionMatch = response.url.match(/\/([A-Z]+)_(\d+_\d+_\d+_\d+)\.crx$/i);
+        // Extract everything after the last '/' and before '.crx', then get the part after '_'
+        const urlParts = response.url.split('/').pop(); // Get last part: "EXTENSIONID_3_4_5_0.crx"
+        const versionMatch = urlParts.match(/_([^_].*)\.crx$/i); // Match everything after first '_' until '.crx'
         console.log('Version match:', versionMatch);
         
-        if (versionMatch && versionMatch[2]) {
-            // Convert underscores to dots: 3.4.5.0
-            const extractedVersion = versionMatch[2].replace(/_/g, '.');
+        if (versionMatch && versionMatch[1]) {
+            // Convert underscores to dots: 3_4_5_0 -> 3.4.5.0
+            const extractedVersion = versionMatch[1].replace(/_/g, '.');
             console.log('Extracted version:', extractedVersion);
             return extractedVersion;
         }
