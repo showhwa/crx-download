@@ -65,7 +65,9 @@ async function getExtensionVersion(extensionId) {
         
         if (versionMatch && versionMatch[1]) {
             // Convert underscores to dots: 3_4_5_0 -> 3.4.5.0
-            const extractedVersion = versionMatch[1].replace(/_/g, '.');
+            let extractedVersion = versionMatch[1].replace(/_/g, '.');
+            // Remove trailing .0 if present
+            extractedVersion = extractedVersion.replace(/\.0$/, '');
             console.log('Extracted version:', extractedVersion);
             return extractedVersion;
         }
